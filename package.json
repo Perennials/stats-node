@@ -1,0 +1,19 @@
+{
+	"name": "Stats",
+	"description": "Basic runtime stats colector Node.js.",
+	"version": "1.0.0",
+	"author": {
+		"name": "Borislav Peev",
+		"email": "borislav.asdf@gmail.com"
+	},
+	"engine": [
+		"node >= 4.0.0"
+	],
+	"dependencies": {
+		"Prototype": "https://github.com/perennials/prototype-js/tarball/master"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/perennials/stats-node"
+	}
+}
