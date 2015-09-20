@@ -1,10 +1,13 @@
 "use strict";
 
+var Sprintf = require( 'sprintf-js' ).sprintf;
+
 //ported from https://github.com/Perennials/providerkit-core-php/blob/master/src/utils/TimeUtils.php
 
-const MilisecsPerDay = 24 * 60 * 60 * 1000;
-const MilisecsPerHour = 60 * 60 * 1000;
-const MilisecsPerMinute = 60 * 1000;
+const MilisecsPerSecond = 1000;
+const MilisecsPerMinute = 60 * MilisecsPerSecond;
+const MilisecsPerHour = 60 * MilisecsPerMinute;
+const MilisecsPerDay = 24 * MilisecsPerHour;
 
 /**
 A compilation of time related functions.
@@ -24,24 +27,22 @@ class TimeUtils {
 	@param string {@see sprintf()} format string for short format. The default is '%d %s'.
 	@return string
 	*/
-	static timeAgoFormat ( date2, date1, precise /*= true, format_long = null, format_short = null*/ ) {
+	static timeAgoFormat ( date2, date1, precise /*= true*/, format_long /*= null*/, format_short /*= null*/ ) {
 		precise = precise || true;
-		// format_long = format_long || null;
-		// format_short = format_short || null;
+		format_long = format_long || null;
+		format_short = format_short || null;
 		var r = TimeUtils.timeAgo( date2, date1, precise );
-		// if ( format_long === null ) {
-		// 	format_long = '%d %s %d %s';
-		// }
-		// if ( format_short === null ) {
-		// 	format_short = '%d %s';
-		// }
+		if ( format_long === null ) {
+			format_long = '%d %s %d %s';
+		}
+		if ( format_short === null ) {
+			format_short = '%d %s';
+		}
 		if ( !precise || r.length < 4 ) {
-			return `${r[0]} ${r[1]}`;
-			// return sprintf( format_short, r[ 0 ], r[ 1 ] );
+			return Sprintf( format_short, r[ 0 ], r[ 1 ] );
 		}
 		else {
-			return `${r[0]} ${r[1]} ${r[2]} ${r[3]}`;
-			// return sprintf( format_long, r[ 0 ], r[ 1 ], r[ 2 ], r[ 3 ] );
+			return Sprintf( format_long, r[ 0 ], r[ 1 ], r[ 2 ], r[ 3 ] );
 		}
 	}
 
@@ -59,7 +60,7 @@ class TimeUtils {
 		precise = precise || true;
 		var year2 = new Date( date2 ).getYear();
 		var month2 = new Date( date2 ).getMonth();
-		if ( date1 === null ) {
+		if ( !(date1 > 0) ) {
 			var year1 = year2;
 			var month1 = month2;
 			var date1 = 0;
@@ -119,18 +120,30 @@ class TimeUtils {
 					else {
 						var minutes = Math.floor( diff / MilisecsPerMinute );
 						if ( minutes >= 1 ) {
-							var seconds = diff % MilisecsPerMinute;
+							var rest = diff % MilisecsPerMinute;
+							var seconds = Math.floor( rest / MilisecsPerSecond );
 							i1 = minutes;
 							i2 = seconds;
 							n1 = 'minute';
 							n2 = 'second';
 						}
 						else {
-							i1 = diff;
-							if ( i1 < 1 ) {
-								i1 = 1;
+							var seconds = Math.floor( diff / MilisecsPerSecond );
+							if ( seconds >= 1 ) {
+								var rest = diff % MilisecsPerSecond;
+								var miliseconds = rest;
+								i1 = seconds;
+								i2 = miliseconds;
+								n1 = 'second';
+								n2 = 'milisecond';
 							}
-							n1 = 'second';
+							else {
+								i1 = diff;
+								if ( i1 < 1 ) {
+									i1 = 1;
+								}
+								n1 = 'milisecond';
+							}
 						}
 					}
 				}

@@ -1,5 +1,8 @@
 "use strict";
 
+require( 'Prototype' );
+var Sprintf = require( 'sprintf-js' ).sprintf;
+
 //ported from https://github.com/Perennials/providerkit-core-php/blob/master/src/utils/FormatUtils.php
 
 /**
@@ -21,13 +24,13 @@ class FormatUtils {
 	@return string the default is something like "3.45 MB" (two points precision)
 	@author this function comes from the net and is refactored by bobef
 	*/
-	static formatBytes ( bytes, forceunit /*= null*/, /*format = null,*/ si /*= true*/ ) {
+	static formatBytes ( bytes, forceunit /*= null*/, format /*= null*/, si /*= true*/ ) {
 		// Format string
-		// if ( format === null ) {
-		// 	format = '%01.2f %s';
-		// }
+		if ( !String.isString( format ) ) {
+			format = '%01.2f %s';
+		}
 
-		si = si || true;
+		si = si !== undefined ? si : true;
 
 		// IEC prefixes (binary)
 		if ( si == false || (String.isString( forceunit ) && forceunit.indexOf( 'i' ) >= 0) ) {
@@ -42,12 +45,11 @@ class FormatUtils {
 
 		// Determine unit to use
 		var power = 0;
-		if ( power = units.indexOf( forceunit ) < 0 ) {
-			power = (bytes > 0) ? Math.floor( Math.log( bytes, mod ) ) : 0;
+		if ( (power = units.indexOf( forceunit )) < 0 ) {
+			power = (bytes > 0) ? Math.floor( Math.log( bytes ) / Math.log( mod ) ) : 0;
 		}
 
-		return `${ (bytes / Math.pow( mod, power )).toPrecision( 2 ) } ${ units[ power ] }`;
-		// return sprintf( format, bytes / pow( mod, power ), units[ power ] );
+		return Sprintf( format, bytes / Math.pow( mod, power ), units[ power ] );
 	}
 }
 
