@@ -4,10 +4,10 @@ var Sprintf = require( 'sprintf-js' ).sprintf;
 
 //ported from https://github.com/Perennials/providerkit-core-php/blob/master/src/utils/TimeUtils.php
 
-const MilisecsPerSecond = 1000;
-const MilisecsPerMinute = 60 * MilisecsPerSecond;
-const MilisecsPerHour = 60 * MilisecsPerMinute;
-const MilisecsPerDay = 24 * MilisecsPerHour;
+const MillisecsPerSecond = 1000;
+const MillisecsPerMinute = 60 * MillisecsPerSecond;
+const MillisecsPerHour = 60 * MillisecsPerMinute;
+const MillisecsPerDay = 24 * MillisecsPerHour;
 
 /**
 A compilation of time related functions.
@@ -91,7 +91,7 @@ class TimeUtils {
 
 			var diff = date2 - date1;
 
-			var days = Math.floor( diff / MilisecsPerDay );
+			var days = Math.floor( diff / MillisecsPerDay );
 
 			if ( months >= 1 && days >= 28 ) {
 				//months' length vary so we cant calculate the days without calendar knowledge
@@ -100,49 +100,49 @@ class TimeUtils {
 			}
 			else {
 				if ( days >= 1 ) {
-					var rest = diff % MilisecsPerDay;
-					var hours = Math.floor( rest / MilisecsPerHour );
+					var rest = diff % MillisecsPerDay;
+					var hours = Math.floor( rest / MillisecsPerHour );
 					i1 = days;
 					i2 = hours;
 					n1 = 'day';
 					n2 = 'hour';
 				}
 				else {
-					var hours = Math.floor( diff / MilisecsPerHour );
+					var hours = Math.floor( diff / MillisecsPerHour );
 					if ( hours >= 1 ) {
-						var rest = diff % MilisecsPerHour;
-						var minutes = Math.floor( rest / MilisecsPerMinute );
+						var rest = diff % MillisecsPerHour;
+						var minutes = Math.floor( rest / MillisecsPerMinute );
 						i1 = hours;
 						i2 = minutes;
 						n1 = 'hour';
 						n2 = 'minute';
 					}
 					else {
-						var minutes = Math.floor( diff / MilisecsPerMinute );
+						var minutes = Math.floor( diff / MillisecsPerMinute );
 						if ( minutes >= 1 ) {
-							var rest = diff % MilisecsPerMinute;
-							var seconds = Math.floor( rest / MilisecsPerSecond );
+							var rest = diff % MillisecsPerMinute;
+							var seconds = Math.floor( rest / MillisecsPerSecond );
 							i1 = minutes;
 							i2 = seconds;
 							n1 = 'minute';
 							n2 = 'second';
 						}
 						else {
-							var seconds = Math.floor( diff / MilisecsPerSecond );
+							var seconds = Math.floor( diff / MillisecsPerSecond );
 							if ( seconds >= 1 ) {
-								var rest = diff % MilisecsPerSecond;
-								var miliseconds = rest;
+								var rest = diff % MillisecsPerSecond;
+								var milliseconds = rest;
 								i1 = seconds;
-								i2 = miliseconds;
+								i2 = milliseconds;
 								n1 = 'second';
-								n2 = 'milisecond';
+								n2 = 'millisecond';
 							}
 							else {
 								i1 = diff;
 								if ( i1 < 1 ) {
 									i1 = 1;
 								}
-								n1 = 'milisecond';
+								n1 = 'millisecond';
 							}
 						}
 					}
