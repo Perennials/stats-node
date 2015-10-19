@@ -281,7 +281,7 @@ class Stats {
 			}
 			else if ( u == 'ms' ) {
 				if ( v > 6000 ) {
-					v = TimeUtils.timeAgoFormat( v, null, true );
+					v = TimeUtils.timeAgoFormat( v, { Precise: true } );
 				}
 				else {
 					v = ( v / 1000 ) + ' s';

@@ -9,6 +9,46 @@ const MillisecsPerMinute = 60 * MillisecsPerSecond;
 const MillisecsPerHour = 60 * MillisecsPerMinute;
 const MillisecsPerDay = 24 * MillisecsPerHour;
 
+var DefStrings = {
+	Long: {
+		year: 'year',
+		years: 'years',
+		month: 'month',
+		months: 'months',
+		day: 'day',
+		days: 'days',
+		hour: 'hour',
+		hours: 'hours',
+		minute: 'minute',
+		minutes: 'minutes',
+		second: 'second',
+		seconds: 'seconds',
+		millisecond: 'millisecond',
+		milliseconds: 'milliseconds',
+	},
+	Short: {
+		year: 'y',
+		years: 'y',
+		month: 'm',
+		months: 'm',
+		day: 'd',
+		days: 'd',
+		hour: 'h',
+		hours: 'h',
+		minute: 'min',
+		minutes: 'min',
+		second: 's',
+		seconds: 's',
+		millisecond: 'ms',
+		milliseconds: 'ms',
+	}
+};
+
+var DefFormat = {
+	Short: '%d %s',
+	Long: '%d %s %d %s'
+};
+
 /**
 A compilation of time related functions.
 
@@ -20,29 +60,50 @@ class TimeUtils {
 
 	For example "1 year 2 months", "1 minute 3 seconds", "10 hours".
 
-	@param int
-	@param int
-	@param bool if false the return value will contain only the most significant time unit
-	@param string {@see sprintf()} format string for long format. The default is '%d %s %d %s'.
-	@param string {@see sprintf()} format string for short format. The default is '%d %s'.
+	@param int|Date
+	@param int|Date
+	@param Object 
+	```js
+	{
+		// If false the return value will contain only the most significant time unit.
+		Precise: Boolean,
+		// {@see sprintf()} format string for long format. The default is '%d %s %d %s'.
+		LongFormat: String,
+		// {@see sprintf()} format string for short format. The default is '%d %s'.
+		ShortFormat: String
+		Strings: Object|'short'
+	}
+	```
 	@return string
 	*/
-	static timeAgoFormat ( date2, date1, precise /*= true*/, format_long /*= null*/, format_short /*= null*/ ) {
-		precise = precise || true;
-		format_long = format_long || null;
-		format_short = format_short || null;
+	static timeAgoFormat ( date2, date1, options ) {
+
+		if ( date2 instanceof Date ) {
+			data2 = date2.valueOf();
+		}
+		
+		if ( date1 instanceof Date ) {
+			date1 = date1.valueOf();
+		}
+
+		if ( date1 instanceof Object ) {
+			options = date1;
+			date1 = null;
+		}
+
+		var precise = options ? options.Precise || true : true;
+		var format_long = options ? options.LongFormat || DefFormat.Long : DefFormat.Long;
+		var format_short = options ? options.ShortFormat || DefFormat.Short : DefFormat.Short;
+		var strings = options ? options.Strings || DefStrings.Long : DefStrings.Long;
+		if ( strings == 'short' ) {
+			strings = DefStrings.Short;
+		}
 		var r = TimeUtils.timeAgo( date2, date1, precise );
-		if ( format_long === null ) {
-			format_long = '%d %s %d %s';
-		}
-		if ( format_short === null ) {
-			format_short = '%d %s';
-		}
 		if ( !precise || r.length < 4 ) {
-			return Sprintf( format_short, r[ 0 ], r[ 1 ] );
+			return Sprintf( format_short, r[ 0 ], strings[ r[ 1 ] ] );
 		}
 		else {
-			return Sprintf( format_long, r[ 0 ], r[ 1 ], r[ 2 ], r[ 3 ] );
+			return Sprintf( format_long, r[ 0 ], strings[ r[ 1 ] ], r[ 2 ], strings[ r[ 3 ] ] );
 		}
 	}
 
@@ -51,12 +112,21 @@ class TimeUtils {
 
 	For example "[1, 'year', 2, 'months']", "[1, 'minute', 2, 'seconds']", "[10, 'hours']".
 
-	@param int
-	@param int
+	@param int|Date
+	@param int|Date
 	@param bool if false the return value will contain only the most significant time unit, i.e. the length of the array will always be 2.
 	@return array
 	*/
 	static timeAgo ( date2, date1, precise /*= true*/ ) {
+
+		if ( date2 instanceof Date ) {
+			data2 = date2.valueOf();
+		}
+
+		if ( date1 instanceof Date ) {
+			date1 = date1.valueOf();
+		}
+
 		precise = precise || true;
 		var year2 = new Date( date2 ).getYear();
 		var month2 = new Date( date2 ).getMonth();
