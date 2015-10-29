@@ -50,33 +50,8 @@ var DefFormat = {
 	Long: '%d %s %d %s'
 };
 
-/**
-A compilation of time related functions.
-
-@author Borislav Peev <borislav.asdf@gmail.com>
-*/
 class TimeUtils {
-	/**
-	Returns the time difference between two dates as string.
 
-	For example "1 year 2 months", "1 minute 3 seconds", "10 hours".
-
-	@param int|Date
-	@param int|Date
-	@param Object 
-	```js
-	{
-		// If false the return value will contain only the most significant time unit.
-		Precise: Boolean,
-		// {@see sprintf()} format string for long format. The default is '%d %s %d %s'.
-		LongFormat: String,
-		// {@see sprintf()} format string for short format. The default is '%d %s'.
-		ShortFormat: String
-		Strings: Object|'short'
-	}
-	```
-	@return string
-	*/
 	static timeAgoFormat ( date2, date1, options ) {
 
 		if ( date2 instanceof Date ) {
@@ -99,7 +74,7 @@ class TimeUtils {
 		if ( strings == 'short' ) {
 			strings = DefStrings.Short;
 		}
-		var r = TimeUtils.timeAgo( date2, date1, precise );
+		var r = TimeUtils.timeAgo( date2, date1, { Precise: precise } );
 		if ( !precise || r.length < 4 ) {
 			return Sprintf( format_short, r[ 0 ], strings[ r[ 1 ] ] );
 		}
@@ -108,17 +83,7 @@ class TimeUtils {
 		}
 	}
 
-	/**
-	Returns the time difference between two dates as array.
-
-	For example "[1, 'year', 2, 'months']", "[1, 'minute', 2, 'seconds']", "[10, 'hours']".
-
-	@param int|Date
-	@param int|Date
-	@param bool if false the return value will contain only the most significant time unit, i.e. the length of the array will always be 2.
-	@return array
-	*/
-	static timeAgo ( date2, date1, precise /*= true*/ ) {
+	static timeAgo ( date2, date1, options ) {
 
 		if ( date2 instanceof Date ) {
 			data2 = date2.valueOf();
@@ -128,7 +93,7 @@ class TimeUtils {
 			date1 = date1.valueOf();
 		}
 
-		precise = precise || true;
+		var precise = (options instanceof Object && options.Precise) || true;
 		var year2 = new Date( date2 ).getYear();
 		var month2 = new Date( date2 ).getMonth();
 		if ( !(date1 > 0) ) {
@@ -238,8 +203,8 @@ class TimeUtils {
 }
 
 TimeUtils.static( {
-	DefStrings: DefStrings,
-	DefFormat: DefFormat
+	DefaultStrings: DefStrings,
+	DefaultFormat: DefFormat
 } );
 
 module.exports = TimeUtils;

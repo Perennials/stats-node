@@ -1,7 +1,7 @@
 {
 	"name": "Stats",
 	"description": "Basic runtime stats colector Node.js.",
-	"version": "1.1.1",
+	"version": "1.1.2",
 	"author": {
 		"name": "Borislav Peev",
 		"email": "borislav.asdf@gmail.com"
@@ -9,6 +9,7 @@
 	"engine": [
 		"node >= 4.0.0"
 	],
+	"main": "Stats.js",
 	"scripts": {
 		"test": "node ./tests/tests.js"
 	},
