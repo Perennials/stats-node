@@ -1,3 +1,7 @@
+1.1.1
+---
+- Fix crash when time name is number.
+
 1.1
 ---
 - `TimeUtils.timeAgo()` and `TimeUtils.timeAgoFormat()` now accept `Date`s.

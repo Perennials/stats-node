@@ -1,7 +1,7 @@
 {
 	"name": "Stats",
 	"description": "Basic runtime stats colector Node.js.",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"author": {
 		"name": "Borislav Peev",
 		"email": "borislav.asdf@gmail.com"

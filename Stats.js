@@ -49,6 +49,7 @@ class Stats {
 	constructor () {
 		this._timerStack = [];
 		this._timers = new WeakMap();
+		this._timers2 = {};
 		this._stats = {};
 		this._counts = {};
 		this._units = {};
@@ -65,8 +66,11 @@ class Stats {
 	*/
 	startTimer ( name ) {
 		var time = Date.now();
-		if ( name ) {
+		if ( name instanceof Object ) {
 			this._timers.set( name, time );
+		}
+		else if ( name ) {
+			this._timers2[ name ] = time;
 		}
 		else {
 			this._timerStack.push( time );
@@ -81,8 +85,11 @@ class Stats {
 	*/
 	endTimer ( name ) {
 		var time = Date.now();
-		if ( name ) {
+		if ( name instanceof Object ) {
 			return time - this._timers.get( name );
+		}
+		else if ( name ) {
+			return time - this._timers2[ name ];
 		}
 		else {
 			return time - this._timerStack.pop();
