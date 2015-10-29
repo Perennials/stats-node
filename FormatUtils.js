@@ -24,13 +24,19 @@ class FormatUtils {
 	@return string the default is something like "3.45 MB" (two points precision)
 	@author this function comes from the net and is refactored by bobef
 	*/
-	static formatBytes ( bytes, forceunit /*= null*/, format /*= null*/, si /*= true*/ ) {
+	static formatBytes ( bytes, options ) {
+
+		if ( !Object.isObject( options ) ) {
+			options = {};
+		}
 		// Format string
-		if ( !String.isString( format ) ) {
-			format = '%01.2f %s';
+		var format = options.Format;
+		if ( !String.isString( options.Format ) ) {
+			format = FormatUtils.DefFormat.Bytes;
 		}
 
-		si = si !== undefined ? si : true;
+		var si = options.UseSi !== undefined ? options.UseSi : true;
+		var forceunit = options.ForceUnit;
 
 		// IEC prefixes (binary)
 		if ( si == false || (String.isString( forceunit ) && forceunit.indexOf( 'i' ) >= 0) ) {
@@ -52,5 +58,11 @@ class FormatUtils {
 		return Sprintf( format, bytes / Math.pow( mod, power ), units[ power ] );
 	}
 }
+
+FormatUtils.static( {
+	DefFormat: {
+		Bytes: '%01.2f %s'
+	}
+} )
 
 module.exports = FormatUtils;

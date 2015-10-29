@@ -277,18 +277,21 @@ class Stats {
 
 	@return array AA aray where the key is the name of the stat. The array is sorted by key.
 	*/
-	getStats () {
+	getStats ( options ) {
+		options = options || Stats.DefaultOptions;
+		var timeOptions = options.Time || Stats.DefaultOptions.Time;
+		var byteOptions = options.Byte || Stats.DefaultOptions.Byte;
 		var ret = {};
 		var stats = this._stats;
 		for ( var k in stats ) {
 			var v = stats[ k ];
 			var u = this.getUnit( k );
 			if ( u == 'b' ) {
-				v = FormatUtils.formatBytes( v );
+				v = FormatUtils.formatBytes( v, byteOptions );
 			}
 			else if ( u == 'ms' ) {
 				if ( v > 6000 ) {
-					v = TimeUtils.timeAgoFormat( v, { Precise: true } );
+					v = TimeUtils.timeAgoFormat( v, timeOptions );
 				}
 				else {
 					v = ( v / 1000 ) + ' s';
@@ -310,5 +313,12 @@ class Stats {
 	}
 
 }
+
+Stats.static( {
+	DefaultOptions: {
+		Bytes: undefined,
+		Time: { Precise: true }
+	}
+} );
 
 module.exports = Stats;

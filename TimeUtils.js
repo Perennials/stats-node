@@ -1,5 +1,6 @@
 "use strict";
 
+require( 'Prototype' );
 var Sprintf = require( 'sprintf-js' ).sprintf;
 
 //ported from https://github.com/Perennials/providerkit-core-php/blob/master/src/utils/TimeUtils.php
@@ -235,5 +236,10 @@ class TimeUtils {
 		}
 	}
 }
+
+TimeUtils.static( {
+	DefStrings: DefStrings,
+	DefFormat: DefFormat
+} );
 
 module.exports = TimeUtils;
