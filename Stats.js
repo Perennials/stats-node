@@ -143,12 +143,16 @@ class Stats {
 				v = FormatUtils.formatBytes( v, byteOptions );
 			}
 			else if ( u == 'ms' ) {
+				/* This will mess up processing inside the log server
 				if ( v > 6000 ) {
 					v = TimeUtils.timeAgoFormat( v, timeOptions );
 				}
 				else {
 					v = ( v / 1000 ) + ' s';
-				}
+				}*/
+				
+				v = ( v / 1000 ) + ' s';
+				
 			}
 			else if ( u !== undefined ) {
 				v = v + ' ' + u;
